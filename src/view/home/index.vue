@@ -15,10 +15,10 @@
                 <div class="Web_title-d">免费使用 | 自由定制 | 轻移动 | 智能统计</div>
                 <div class="Web_title-c">
                   <div class="Web_btn1">
-                    <a href="/login.html">免费体检</a>
+                    <a @click="tiyan">免费体检</a>
                   </div>
                   <div class="Web_btn2">
-                    <a href="/cooperation.html">合作咨询</a>
+                    <router-link to="/form/cooperation">合作咨询</router-link>
                   </div>
                 </div>
               </div>
@@ -126,6 +126,16 @@ export default {
       "/api/cms/index/init"
     );
     this.init = init;
+  },
+  methods: {
+    tiyan() {
+      let token = sessionStorage.getItem("token");
+      if (token) {
+        window.location.href = `http://localhost:3000/#/auth?access_token=${token}`
+      } else {
+        this.$router.replace('/form/login')
+      }
+    }
   }
 };
 </script>

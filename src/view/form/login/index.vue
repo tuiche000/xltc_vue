@@ -13,7 +13,7 @@
           <div class="form_item">
             <div class="flex justify-between">
               <input type="password" v-model="form_pass.password" placeholder="请输入密码" />
-              <a href="javascript:void(0)">忘记密码</a>
+              <!-- <a href="javascript:void(0)">忘记密码</a> -->
             </div>
           </div>
 
@@ -71,7 +71,7 @@ export default {
         return;
       }
       let res = await this.$axios._POST(
-        "http://h5.fothing.com/api/oss/user/login",
+        "https://check.fothing.com/api/oss/user/login",
         {
           ...this.form_pass,
           clientId: "1qUvjuFXqi3rpr88epJwfw",
@@ -79,9 +79,8 @@ export default {
         }
       );
       if (res.code == "0") {
-        window.console.log(res.data)
         window.sessionStorage.setItem("token", res.data.access_token);
-        window.location.href = `http://localhost:3000/#/auth?access_token=${res.data.access_token}`
+        window.location.href = '/'
       }
     },
     async smsLogin() {
@@ -100,7 +99,7 @@ export default {
         return;
       }
       const res = this.$axios._POST(
-        "http://h5.fothing.com/api/oss/user/login/sms",
+        "https://check.fothing.com/api/oss/user/login/sms",
         {
           ...this.form_sms,
           clientId: "1qUvjuFXqi3rpr88epJwfw",
@@ -108,66 +107,25 @@ export default {
         }
       );
       if (res.code == "0") {
-        window.sessionStorage.setItem("token", res.data);
-        window.reload();
+        window.sessionStorage.setItem("token", res.data.access_token);
+        window.location.href = '/'
       }
     },
     async getSms() {
-      const res = this.$axios._GET(
-        `http://h5.fothing.com/api/oss/user/${this.form_sms.phone}/login/message`
+      const res = await this.$axios._GET(
+        `https://check.fothing.com/api/oss/user/${this.form_sms.phone}/login/message`
       );
-      window.console.log(res);
+      if (res.code == "0") {
+        this.$message({
+          message: "已发送，请注意查收短信",
+          type: "success"
+        });
+      }
     }
   }
 };
 </script>
 
 <style scoped>
-.cont {
-  height: 300px;
-  display: flex;
-  justify-content: center;
-  position: relative;
-}
-
-.base {
-  position: absolute;
-  top: -171px;
-  width: 437px;
-  background-color: #ffffff;
-  box-shadow: 0px 0px 23px 4px rgba(142, 142, 142, 0.22);
-}
-
-.cont_box {
-  padding: 70px 85px 40px 85px;
-}
-
-.tabs {
-  display: flex;
-  justify-content: space-around;
-}
-
-.tab {
-  color: #303030;
-  cursor: pointer;
-  padding-bottom: 3px;
-}
-
-.tab_active {
-  color: #2257c9;
-  border-bottom: 3px solid #2257c9;
-}
-.form_item {
-  margin-top: 40px;
-}
-
-button {
-  width: 150px;
-  height: 40px;
-  background-color: #f5ab35;
-  border-radius: 5px;
-  color: #fff;
-  margin-top: 40px;
-  cursor: pointer;
-}
+@import '../common.css';
 </style>

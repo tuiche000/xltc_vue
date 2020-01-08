@@ -62,7 +62,7 @@ export default {
   display: flex;
   justify-content: space-between;
   /* flex-direction: column; */
-  padding: 20px 140px 0 200px;
+  padding: 50px 140px 0 200px;
 }
 .Web_foot_words {
   font-family: AdobeHeitiStd-Regular;

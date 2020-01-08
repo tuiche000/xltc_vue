@@ -10,7 +10,12 @@
           </div>
         </div>
         <div class="Web_head_middle">
-          <div class="Web_head_title Web_orange" v-for="menu in category" :key="menu.code">
+          <!-- Web_orange -->
+          <div
+            :class="`Web_head_title`"
+            v-for="(menu) in category"
+            :key="menu.code"
+          >
             <router-link :to="menu.target">{{menu.name}}</router-link>
           </div>
         </div>
@@ -22,12 +27,16 @@
           <div style="margin: 5px;opacity: 0.4;" class="Web_head_title">|</div>
           <div style="margin: 5px;" class="Web_head_title">
             <img src="../assets/zhuce.png" alt />
-            <a href="/register.html">注册</a>
+            <router-link to="/form/register">注册</router-link>
           </div>
         </div>
         <div v-if="token" class="Web_head_login">
-          <div class="Web_head_title">
-            <a :href="'http://localhost:3000/#/?access_token=' + token.access_token">进入后台</a>
+          <div style="margin: 5px;" class="Web_head_title">
+            <a :href="`http://localhost:3000/#/auth?access_token=${token}`">进入后台</a>
+          </div>
+          <div style="margin: 5px;opacity: 0.4;" class="Web_head_title">|</div>
+          <div style="margin: 5px;" class="Web_header_title">
+            <a href="javascript:void(0)" style="color:#fff;" @click="out">退出登录</a>
           </div>
         </div>
       </div>
@@ -41,17 +50,25 @@ export default {
     return {
       info: {},
       category: [],
+      menu: 0,
       token: undefined
     };
   },
   async created() {
-    this.token = JSON.parse(sessionStorage.getItem("token"));
+    this.menu = this.$route.query.menu;
+    this.token = sessionStorage.getItem("token");
     let company = await this.$axios._GET(
       "/api/cms/company/tax/91110105666288389K"
     );
     let category = await this.$axios._GET("/api/cms/category/LOIOT/children");
     this.info = company;
     this.category = category;
+  },
+  methods: {
+    out() {
+      sessionStorage.clear();
+      window.location.reload();
+    }
   }
 };
 </script>
