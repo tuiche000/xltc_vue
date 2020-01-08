@@ -11,7 +11,7 @@
         </div>
         <div class="Web_head_middle">
           <div class="Web_head_title Web_orange" v-for="menu in category" :key="menu.code">
-            <a href="javascript:void(0)">{{menu.name}}</a>
+            <router-link :to="menu.target">{{menu.name}}</router-link>
           </div>
         </div>
         <div v-if="!token" class="Web_head_login">
