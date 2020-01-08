@@ -1,0 +1,47 @@
+.cont {
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+.base {
+  position: absolute;
+  top: -171px;
+  width: 437px;
+  background-color: #ffffff;
+  box-shadow: 0px 0px 23px 4px rgba(142, 142, 142, 0.22);
+}
+
+.cont_box {
+  padding: 70px 85px 40px 85px;
+}
+
+.tabs {
+  display: flex;
+  justify-content: space-around;
+}
+
+.tab {
+  color: #303030;
+  cursor: pointer;
+  padding-bottom: 3px;
+}
+
+.tab_active {
+  color: #2257c9;
+  border-bottom: 3px solid #2257c9;
+}
+.form_item {
+  margin-top: 40px;
+}
+
+button {
+  width: 150px;
+  height: 40px;
+  background-color: #f5ab35;
+  border-radius: 5px;
+  color: #fff;
+  margin-top: 40px;
+  cursor: pointer;
+}

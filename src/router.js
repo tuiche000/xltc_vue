@@ -23,6 +23,22 @@ const routes = [
           title: ''
         }
       },
+      {
+        name: 'register',
+        path: 'register',
+        component: () => import('./view/form/register'),
+        meta: {
+          title: ''
+        }
+      },
+      {
+        name: 'cooperation',
+        path: 'cooperation',
+        component: () => import('./view/form/cooperation'),
+        meta: {
+          title: ''
+        }
+      },
     ]
   },
   {
