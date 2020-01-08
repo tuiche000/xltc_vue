@@ -13,10 +13,10 @@
               <span id="phone">{{info.phone}}</span>
             </div>
           </div>
-          <div class="Web_foot_bottom">
+          <div class="Web_foot_bottom flex">
             <div>
               <span id="chinese">{{info.chinese}}</span>
-              <span id="icp">{{info.icp}}</span>
+              <span id="icp">&nbsp;{{info.icp}}</span>
             </div>
             <div>
               <span id="copyright">{{info.copyright}}</span>
@@ -24,11 +24,11 @@
           </div>
         </div>
         <div style="display: flex;flex-direction: column;justify-content: center;">
-          <div style="padding-right: 30px;">
-            <img id="qrcode" :src="info.qrcode" width="120" alt />
+          <div style="display: flex;justify-content: center;">
+            <img id="qrcode" :src="info.qrcode" width="100" alt />
           </div>
-          <div class="Web_foot_bottom">
-            <img style="width: 38px;height: 30px;" src="../assets/guohui.png" alt />工商网监认证
+          <div style="margin-top:10px;" class="Web_foot_bottom flex align-center justify-center">
+            <img style="width: 38px;height: 30px;margin-top:5px;" src="../assets/guohui.png" alt />工商网监认证
           </div>
         </div>
       </div>
@@ -41,11 +41,11 @@ export default {
   data() {
     return {
       info: {}
-    }
+    };
   },
   async created() {
-    let res = await this.$axios._GET('/api/cms/company/tax/91110105666288389K');
-    this.info = res
+    let res = await this.$axios._GET("/api/cms/company/tax/91110105666288389K");
+    this.info = res;
   }
 };
 </script>
@@ -62,7 +62,7 @@ export default {
   display: flex;
   justify-content: space-between;
   /* flex-direction: column; */
-  padding: 20px 200px 0 200px;
+  padding: 20px 140px 0 200px;
 }
 .Web_foot_words {
   font-family: AdobeHeitiStd-Regular;
@@ -82,5 +82,9 @@ export default {
   line-height: 40px;
   letter-spacing: 0px;
   color: #a6b5d4;
+}
+#qrcode {
+  background: #fff;
+  border-radius: 50%;
 }
 </style>
