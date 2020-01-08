@@ -5,8 +5,8 @@
     </div>
     <div class="middle">
       <div class="faq-left">
-        <!-- <div class="faq-left-title faq-left-chosing" onclick="changeTab(0)">常见问题</div>
-        <div class="faq-left-title" onclick="changeTab(1)">踏查问答</div>-->
+        <div class="faq-left-title faq-left-chosing" onclick="changeTab(0)">常见问题</div>
+        <div class="faq-left-title" onclick="changeTab(1)">踏查问答</div>
       </div>
 
       <div class="faq-right">
@@ -32,11 +32,17 @@
         <div></div>
       </div>
     </div>
+    <Fixed />
   </div>
 </template>
 
 <script>
-export default {};
+import Fixed from "@/components/Fixed.vue";
+export default {
+  components: {
+    Fixed
+  },
+};
 </script>
 
 <style scoped>
@@ -59,7 +65,7 @@ export default {};
 }
 .faq-left {
   width: 233px;
-  height: 1000px;
+  min-height: 600px;
   background: #f8f8f8;
 }
 .faq-left-title {

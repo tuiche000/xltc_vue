@@ -81,7 +81,7 @@ export default {
       if (res.code == "0") {
         window.console.log(res.data)
         window.sessionStorage.setItem("token", res.data.access_token);
-        window.location.href = `http://localhost:3000/#/?access_token=${res.data.access_token}`
+        window.location.href = `http://localhost:3000/#/auth?access_token=${res.data.access_token}`
       }
     },
     async smsLogin() {
