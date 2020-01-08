@@ -1,12 +1,25 @@
 <template>
   <div class="container1">
     <div class="header">
+      <div
+        class="header-title"
+        :style="`left: ${(index + 1) * 28}%`"
+        v-for="(item, index) in categorys"
+        :key="index"
+      >
+        <span @click="getMenu(item.children)">{{item.name}}</span>
+        <!-- <div class="header-title-chosing">常见问题</div> -->
+      </div>
       <img src="@/assets/bg2.jpg" alt />
     </div>
     <div class="middle">
       <div class="faq-left">
-        <!-- <div class="faq-left-title faq-left-chosing" onclick="changeTab(0)">常见问题</div>
-        <div class="faq-left-title" onclick="changeTab(1)">踏查问答</div>-->
+        <div
+          v-for="child in childrens"
+          :key="child.code"
+          class="faq-left-title faq-left-chosing active"
+          @click="getInfo(child.code)"
+        >{{child.name}}</div>
       </div>
 
       <div class="faq-right">
@@ -36,7 +49,36 @@
 </template>
 
 <script>
-export default {};
+export default {
+  components: {
+  },
+  data() {
+    return {
+      categorys: [],
+      childrens: [],
+      result: []
+    };
+  },
+  async created() {
+    let res = await this.$axios._GET(
+      "/api/cms/category/LOIOT_SUPPORT/children"
+    );
+    this.categorys = res;
+    this.childrens = res[0].children;
+  },
+  methods: {
+    getMenu(childrens) {
+      this.childrens = childrens;
+    },
+    async getInfo(id) {
+      let res = await this.$axios._GET(
+        `http://noss.fothing.com/api/cms/page/recent/${id}`
+      );
+      this.categorys = res;
+      this.result = res[0].result;
+    }
+  }
+};
 </script>
 
 <style scoped>
@@ -47,6 +89,36 @@ export default {};
   /* width: 100%;
     background: url(./images/head.png) no-repeat;
     background-size: 100% 100%; */
+  position: relative;
+}
+.header-title {
+  position: absolute;
+  bottom: 0;
+  right: 30%;
+  display: block;
+}
+.header-title span {
+  width: 220px;
+  height: 66px;
+  background: rgba(34, 87, 201, 1);
+  font-size: 26px;
+  color: #fff;
+  display: block;
+  text-align: center;
+  line-height: 66px;
+  opacity: 0.32;
+  cursor: pointer;
+}
+.header-title-chosing {
+  width: 220px;
+  height: 66px;
+  background: rgba(34, 87, 201, 1);
+  font-size: 26px;
+  color: #fff;
+  display: block;
+  text-align: center;
+  cursor: pointer;
+  line-height: 66px;
 }
 .header img {
   width: 100%;
@@ -68,12 +140,12 @@ export default {};
   font-weight: normal;
   letter-spacing: 0px;
   color: #000000;
-  /* text-align: center; */
+  text-align: center;
   cursor: pointer;
   display: block;
   box-sizing: border-box;
   margin-top: 30px;
-  /* padding-left: 40px; */
+  padding: 20px 0;
 }
 .faq-left-title a {
   padding: 12px 0 12px 40px;
