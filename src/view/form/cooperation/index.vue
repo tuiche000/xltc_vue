@@ -91,7 +91,7 @@ export default {
       //   return;
       // }
       let res = await this.$axios._POST(
-        `http://noss.fothing.com/api/cms/cooperation/${this.time}?captcha=${this.form.captcha}`,
+        `/api/cms/cooperation/${this.time}?captcha=${this.form.captcha}`,
         this.form
       );
       if (res.code == "0") {
@@ -111,7 +111,7 @@ export default {
     },
     getCaptcha() {
       this.time = new Date().getTime();
-      this.captcha = `http://noss.fothing.com/api/cms/captcha/${this.time}`;
+      this.captcha = `${require('@/../config.js')}/api/cms/captcha/${this.time}`;
     },
     changeTab(type) {
       this.form.type = type;

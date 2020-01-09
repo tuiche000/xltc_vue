@@ -39,6 +39,14 @@ const routes = [
           title: ''
         }
       },
+      {
+        name: 'more',
+        path: 'more',
+        component: () => import('./view/form/more'),
+        meta: {
+          title: ''
+        }
+      },
     ]
   },
   {
@@ -49,8 +57,22 @@ const routes = [
     }
   },
   {
-    name: 'article',
-    component: () => import('./view/article'),
+    name: 'case',
+    component: () => import('./view/case'),
+    meta: {
+      title: ''
+    }
+  },
+  {
+    name: 'usege',
+    component: () => import('./view/usege'),
+    meta: {
+      title: ''
+    }
+  },
+  {
+    name: 'profile',
+    component: () => import('./view/profile'),
     meta: {
       title: ''
     }
@@ -69,7 +91,11 @@ routes.forEach(route => {
   route.path = route.path || '/' + (route.name || '');
 });
 
-const router = new Router({ routes });
+const router = new Router({
+  routes, scrollBehavior() {
+    return { x: 0, y: 0 }
+  }
+});
 
 router.beforeEach((to, from, next) => {
   const title = to.meta && to.meta.title;

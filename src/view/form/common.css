@@ -5,6 +5,10 @@
   position: relative;
 }
 
+/* .el-input__inner {
+  border: none;
+} */
+
 .base {
   position: absolute;
   top: -171px;
@@ -34,6 +38,9 @@
 }
 .form_item {
   margin-top: 40px;
+  display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
 }
 
 button {
@@ -44,4 +51,7 @@ button {
   color: #fff;
   margin-top: 40px;
   cursor: pointer;
+}
+input, .form-control {
+  font-size: 14px;
 }

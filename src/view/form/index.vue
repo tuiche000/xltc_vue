@@ -12,6 +12,7 @@
 </template>
 
 <script>
+import { mapMutations } from "vuex";
 export default {
   data() {
     return {
@@ -19,9 +20,13 @@ export default {
     }
   },
   created() {
+    this.SET_MENU(null)
     if (this.$route.name == 'cooperation') {
       this.text = true
     }
+  },
+  methods: {
+    ...mapMutations(['SET_MENU']),
   }
 };
 </script>

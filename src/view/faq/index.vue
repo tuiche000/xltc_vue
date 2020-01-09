@@ -2,47 +2,56 @@
   <div class="container1">
     <div class="header">
       <div
-        class="header-title"
+        :class="['header-title', tab == item.code ? 'header-title-chosing' : '']"
         :style="`left: ${(index + 1) * 28}%`"
         v-for="(item, index) in categorys"
         :key="index"
       >
-        <span @click="getMenu(item.children)">{{item.name}}</span>
+        <span @click="getMenu(item.children, item.code)">{{item.name}}</span>
         <!-- <div class="header-title-chosing">常见问题</div> -->
       </div>
-      <img src="@/assets/bg2.jpg" alt />
+      <!-- <img src="@/assets/head.png" alt /> -->
     </div>
     <div class="middle">
       <div class="faq-left">
         <div
-          v-for="child in childrens"
-          :key="child.code"
-          class="faq-left-title faq-left-chosing active"
-          @click="getInfo(child.code)"
-        >{{child.name}}</div>
+          v-for="item in childrens"
+          :key="item.code"
+          :class="['faq-left-title', 'faq-left-chosing', item.code == child ? 'active' : '']"
+          @click="getInfo(item.code)"
+        >{{item.name}}</div>
       </div>
 
-      <div class="faq-right">
-        <!-- <div class="faq-right-title">
-                    <div class="faq-right-changjian"></div>
-                    <div class="faq-right-shijian"></div>
-        </div>-->
+      <div class="faq-right" v-if="result && result.length">
         <div class="faq-right-middle">
-          <!-- <div class="flip">
-                        <div
-                            style="display: flex;justify-content: space-between;margin-bottom: 10px;border-bottom: 1px dotted #ccc;">
-                            <div>1、云平台是否安全？</div>
-                            <div><img class="down-btn" style="width:35px;height:30px;" src="./images/down-btn.png"
-                                    alt="">
-                            </div>
-                        </div>
-                        <div class="panel" style="line-height: 20px;">
-                            答：相信认识是有一个过程的，就像银行刚出来时，很多人宁愿把钱放到床底烂掉，也不愿意存在银行是一样的道理，但最终大家都会把钱存到银行去。企业IT独立安装维护部署的模式是会逐渐被淘汰掉的，这是一个趋势。把企业的IT资产不交给专业的机构去管理，而是通过企业内部的几个人去管理，其实企业的风险更大。
-                        </div>
-          </div> -->
+          <div class="flip" v-for="(item, k) in result" :key="item.id">
+            <div
+              style="display: flex;justify-content: space-between;margin-bottom: 10px;border-bottom: 1px dotted #ccc;"
+              @click="panel = k"
+            >
+              <div>{{item.quest}}</div>
+              <div>
+                <img
+                  class="down-btn"
+                  style="width:35px;height:30px;"
+                  src="@/assets/down-btn.png"
+                  alt
+                />
+              </div>
+            </div>
+            <div
+              :class="['panel', panel == k ? 'panel_active' : '']"
+              style="line-height: 20px;"
+            >{{item.answer}}</div>
+          </div>
         </div>
-
-        <div></div>
+      </div>
+      <div class="faq-right" v-if="result && result.id">
+        <div class="faq-right-title">
+          <div class="faq-right-changjian">{{result.title}}</div>
+          <div class="faq-right-shijian">{{result.publish}}</div>
+        </div>
+        <div class="faq-right-middle flip" v-html="result.content"></div>
       </div>
     </div>
     <Fixed />
@@ -50,6 +59,7 @@
 </template>
 
 <script>
+import { mapMutations } from "vuex";
 import Fixed from "@/components/Fixed.vue";
 export default {
   components: {
@@ -59,26 +69,69 @@ export default {
     return {
       categorys: [],
       childrens: [],
-      result: []
+      result: undefined,
+      tab: "",
+      child: "",
+      panel: 0
     };
   },
   async created() {
+    this.SET_MENU(3);
     let res = await this.$axios._GET(
-      "/api/cms/category/LOIOT_SUPPORT/children"
+      `/api/cms/category/${this.$route.query.code}/children`
     );
     this.categorys = res;
-    this.childrens = res[0].children;
+    // 默认tab
+    if (this.$route.query.tab) {
+      this.tab = this.$route.query.tab;
+      this.childrens = res.find(item => {
+        if (item.code == this.$route.query.tab) {
+          return item;
+        }
+      }).children;
+    } else {
+      this.childrens = res[0].children;
+      this.tab = res[0].code;
+    }
+    // 默认左菜单
+    if (this.$route.query.child) {
+      window.console.log(this.$route.query.code)
+      // if (this.$route.query.code == 'LOIOT_SUPPORT') {
+      //   return
+      // }
+      this.getInfo(this.$route.query.child);
+    } else {
+      this.getInfo(this.childrens[0].code);
+    }
   },
   methods: {
-    getMenu(childrens) {
+    ...mapMutations(['SET_MENU']),
+    getMenu(childrens, code) {
       this.childrens = childrens;
+      this.tab = code;
+      this.$router.push({
+        path: this.$route.path,
+        query: { ...this.$route.query, tab: code }
+      });
     },
     async getInfo(id) {
-      let res = await this.$axios._GET(
-        `http://noss.fothing.com/api/cms/question/type/${id}`
-      );
-      this.categorys = res;
-      this.result = res[0].result;
+      let res = {};
+      this.child = id;
+      this.$router.push({
+        path: this.$route.path,
+        query: { ...this.$route.query, child: id }
+      });
+      if (this.tab == "LOIOT_TECH_COMMON") {
+        res = await this.$axios._GET(
+          `/api/cms/question/type/${id}`
+        );
+        this.result = res.result;
+      } else {
+        res = await this.$axios._GET(
+          `/api/cms/page/recent/${id}`
+        );
+        this.result = res;
+      }
     }
   }
 };
@@ -89,9 +142,10 @@ export default {
   width: 100%;
 }
 .header {
-  /* width: 100%;
-    background: url(./images/head.png) no-repeat;
-    background-size: 100% 100%; */
+  height: 550px;
+  background-image:url("~@/assets/head.png");
+  background-size: cover;
+  background-position: center;
   position: relative;
 }
 .header-title {
@@ -112,8 +166,9 @@ export default {
   opacity: 0.32;
   cursor: pointer;
 }
-.header-title-chosing {
+.header-title-chosing span {
   width: 220px;
+  opacity: 1;
   height: 66px;
   background: rgba(34, 87, 201, 1);
   font-size: 26px;
@@ -134,11 +189,8 @@ export default {
 }
 .faq-left {
   width: 233px;
-  min-height: 600px;
+  height: 1000px;
   background: #f8f8f8;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 .faq-left-title {
   font-family: MicrosoftYaHei;
@@ -146,10 +198,12 @@ export default {
   font-weight: normal;
   letter-spacing: 0px;
   color: #000000;
+  text-align: center;
   cursor: pointer;
   display: block;
   box-sizing: border-box;
   margin-top: 30px;
+  padding: 20px 0;
 }
 .faq-left-title a {
   padding: 12px 0 12px 40px;
@@ -164,17 +218,7 @@ export default {
   margin-left: 24px;
 }
 .faq-left .active {
-  font-family: MicrosoftYaHei;
-  font-size: 20px;
-  font-weight: normal;
-  cursor: pointer;
-  display: block;
-  box-sizing: border-box;
-  margin-top: 30px;
   color: #ffffff;
-  width: 100%;
-  padding: 20px 0;
-  text-align: center;
   background-color: #2257c9;
 }
 .faq-right {
@@ -224,5 +268,8 @@ export default {
   display: none;
   border-bottom: 1px dotted #ccc;
   padding-bottom: 20px;
+}
+.panel_active {
+  display: block;
 }
 </style>

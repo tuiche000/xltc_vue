@@ -1,81 +1,78 @@
 <template>
   <div class="container1">
     <div class="header">
-      <div
+      <!-- <div
         class="header-title"
         :style="`left: ${(index + 1) * 28}%`"
         v-for="(item, index) in categorys"
         :key="index"
       >
         <span @click="getMenu(item.children)">{{item.name}}</span>
-        <!-- <div class="header-title-chosing">常见问题</div> -->
-      </div>
-      <img src="@/assets/bg2.jpg" alt />
+      </div>-->
+      <!-- <img src="@/assets/bg2.jpg" alt /> -->
     </div>
     <div class="middle">
       <div class="faq-left">
         <div
-          v-for="child in childrens"
-          :key="child.code"
-          class="faq-left-title faq-left-chosing active"
-          @click="getInfo(child.code)"
-        >{{child.name}}</div>
+          v-for="item in childrens"
+          :key="item.code"
+          :class="['faq-left-title', 'faq-left-chosing', item.code == child ? 'active' : '']"
+          @click="getInfo(item.code)"
+        >{{item.name}}</div>
       </div>
 
       <div class="faq-right">
-        <!-- <div class="faq-right-title">
-                    <div class="faq-right-changjian"></div>
-                    <div class="faq-right-shijian"></div>
-        </div>-->
-        <div class="faq-right-middle">
-          <!-- <div class="flip">
-                        <div
-                            style="display: flex;justify-content: space-between;margin-bottom: 10px;border-bottom: 1px dotted #ccc;">
-                            <div>1、云平台是否安全？</div>
-                            <div><img class="down-btn" style="width:35px;height:30px;" src="./images/down-btn.png"
-                                    alt="">
-                            </div>
-                        </div>
-                        <div class="panel" style="line-height: 20px;">
-                            答：相信认识是有一个过程的，就像银行刚出来时，很多人宁愿把钱放到床底烂掉，也不愿意存在银行是一样的道理，但最终大家都会把钱存到银行去。企业IT独立安装维护部署的模式是会逐渐被淘汰掉的，这是一个趋势。把企业的IT资产不交给专业的机构去管理，而是通过企业内部的几个人去管理，其实企业的风险更大。
-                        </div>
-          </div>-->
+        <div class="faq-right-title">
+          <div class="faq-right-changjian">{{info.title}}</div>
+          <div class="faq-right-shijian">{{info.publish}}</div>
         </div>
-
-        <div></div>
+        <div class="faq-right-middle flip" v-html="info.content"></div>
       </div>
     </div>
+    <Fixed />
   </div>
 </template>
 
 <script>
+import Fixed from "@/components/Fixed.vue";
 export default {
   components: {
+    Fixed
   },
   data() {
     return {
       categorys: [],
       childrens: [],
-      result: []
+      info: [],
+      child: ""
     };
   },
   async created() {
     let res = await this.$axios._GET(
-      "/api/cms/category/LOIOT_SUPPORT/children"
+      `/api/cms/category/${this.$route.query.code}/children`
     );
-    this.categorys = res;
-    this.childrens = res[0].children;
+    // this.categorys = res;
+    this.childrens = res;
+    if (this.$route.query.child) {
+      this.getInfo(this.$route.query.child);
+    } else {
+      this.getInfo(res[0].code);
+    }
   },
   methods: {
-    getMenu(childrens) {
-      this.childrens = childrens;
-    },
-    async getInfo(id) {
+    // getMenu(childrens) {
+    //   this.childrens = childrens;
+    // },
+    async getInfo(code) {
+      this.$router.push({
+        path: this.$route.path,
+        query: { ...this.$route.query, child: code }
+      });
       let res = await this.$axios._GET(
-        `http://noss.fothing.com/api/cms/page/recent/${id}`
+        `${require('@/../config.js')}/api/cms/page/recent/${code}`
       );
-      this.categorys = res;
-      this.result = res[0].result;
+      this.child = code;
+      this.info = res;
     }
   }
 };
@@ -86,9 +83,9 @@ export default {
   width: 100%;
 }
 .header {
-  /* width: 100%;
-    background: url(./images/head.png) no-repeat;
-    background-size: 100% 100%; */
+  height: 550px;
+  background-image:url("~@/assets/bg2.jpg");
+  background-size: cover;
   position: relative;
 }
 .header-title {

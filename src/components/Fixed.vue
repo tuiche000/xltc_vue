@@ -1,6 +1,6 @@
 <template>
   <div class="Web_fixed">
-    <div class="fixed">
+    <!-- <el-backtop target=".wraper" :bottom="100">
       <div class="Web_fix">
         <img src="@/assets/first.png" alt />
         <a href="/cooperation.html">合作咨询</a>
@@ -13,12 +13,34 @@
         <img src="@/assets/up.png" alt />
         <a href>返回顶部</a>
       </div>
+    </el-backtop>-->
+    <div class="fixed">
+      <div class="Web_fix">
+        <img src="@/assets/first.png" alt />
+        <router-link to="/form/cooperation">合作咨询</router-link>
+      </div>
+      <div style="background-color: #4275e2;" class="Web_fix">
+        <img src="@/assets/mid.png" alt />
+        <router-link
+          to="/profile?code=LOIOT_INTRO&child=LOIOT_INTRO_SELF"
+        >公司简介</router-link>
+      </div>
+      <div style="background-color: #2257c9;" class="Web_fix">
+        <img src="@/assets/up.png" alt />
+        <a href="javascript:void(0)" @click="toTop">返回顶部</a>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  methods: {
+    toTop() {
+      window.scrollTo(0, 0);
+    }
+  }
+};
 </script>
 
 <style scoped>

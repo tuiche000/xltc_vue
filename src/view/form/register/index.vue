@@ -15,8 +15,9 @@
               <a href="javascript:void(0)" @click="getSms">获取验证码</a>
             </div>
           </div>
-
-          <button @click="register" type="button">注册</button>
+          <div style="text-align: center">
+            <button @click="register" type="button">注册</button>
+          </div>
         </div>
       </div>
     </div>
@@ -24,6 +25,8 @@
 </template>
 
 <script>
+const config = require("@/../config.js");
+import { mapMutations } from "vuex";
 export default {
   data() {
     return {
@@ -37,32 +40,39 @@ export default {
   },
   created() {},
   methods: {
+    ...mapMutations(['SET_REGISTER']),
     async register() {
-      // if (!this.form.phone) {
-      //   this.$message({
-      //     message: "请输入手机号",
-      //     type: "warning"
-      //   });
-      //   return;
-      // }
-      // if (!this.form.varCode) {
-      //   this.$message({
-      //     message: "请输入验证码",
-      //     type: "warning"
-      //   });
-      //   return;
-      // }
-      let res = await this.$axios._POST(
-        "https://check.fothing.com/api/oss/user/register",
-        this.form
-      );
-      window.console.log(res)
+      if (!this.form.phone) {
+        this.$message({
+          message: "请输入手机号",
+          type: "warning"
+        });
+        return;
+      }
+      if (!this.form.varCode) {
+        this.$message({
+          message: "请输入验证码",
+          type: "warning"
+        });
+        return;
+      }
+      let res = await this.$axios._GET(`${config.host2}/api/oss/user/${this.form.phone}/check/${this.form.varCode}`);
+      if (res.code == '0') {
+        this.SET_REGISTER(this.form)
+        this.$router.push('/form/more')
+      }
     },
     async getSms() {
+      if (!this.form.phone) {
+        this.$message({
+          message: "请输入手机号",
+          type: "warning"
+        });
+        return;
+      }
       const res = await this.$axios._GET(
-        `https://check.fothing.com/api/oss/user/${this.form.phone}/register/message`
+        `${config.host2}/api/oss/user/${this.form.phone}/register/message`
       );
-      window.console.log(res.code)
       if (res.code == "0") {
         this.$message({
           message: "已发送，请注意查收短信",

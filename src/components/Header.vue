@@ -5,18 +5,22 @@
         <div class="Web_head_left">
           <div style="display: flex;">
             <div style="margin-right: 50px;">
-              <img style="width: 270px;height: 70px;" :src="info.logo" alt />
+              <img style="width: 300px;height: 50px;" :src="info.logo" alt />
             </div>
           </div>
         </div>
         <div class="Web_head_middle">
-          <!-- Web_orange -->
           <div
-            :class="`Web_head_title`"
-            v-for="(menu) in category"
-            :key="menu.code"
+            v-for="(item, k) in category"
+            class="Web_head_title"
+            :class="{ Web_orange: k == menu }"
+            :key="item.code"
           >
-            <router-link :to="menu.target">{{menu.name}}</router-link>
+            <router-link
+              :to="{ path: item.target, query: {
+              code: item.code
+            } }"
+            >{{item.name}}</router-link>
           </div>
         </div>
         <div v-if="!token" class="Web_head_login">
@@ -32,7 +36,7 @@
         </div>
         <div v-if="token" class="Web_head_login">
           <div style="margin: 5px;" class="Web_head_title">
-            <a :href="`http://localhost:3000/#/auth?access_token=${token}`">进入后台</a>
+            <a :href="`${require('@/../config').admin}/#/auth?access_token=${token}`">进入后台</a>
           </div>
           <div style="margin: 5px;opacity: 0.4;" class="Web_head_title">|</div>
           <div style="margin: 5px;" class="Web_header_title">
@@ -45,17 +49,19 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   data() {
     return {
       info: {},
       category: [],
-      menu: 0,
       token: undefined
     };
   },
+  computed: {
+    ...mapState(["menu"])
+  },
   async created() {
-    this.menu = this.$route.query.menu;
     this.token = sessionStorage.getItem("token");
     let company = await this.$axios._GET(
       "/api/cms/company/tax/91110105666288389K"

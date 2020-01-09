@@ -16,8 +16,9 @@
               <!-- <a href="javascript:void(0)">忘记密码</a> -->
             </div>
           </div>
-
-          <button type="button" @click="login">登录</button>
+          <div style="text-align: center">
+            <button type="button" @click="login">登录</button>
+          </div>
         </div>
         <div class="form" v-if="form_active == 2">
           <div class="form_item">
@@ -29,7 +30,9 @@
               <a href="javascript:void(0)" @click="getSms">获取验证码</a>
             </div>
           </div>
-          <button type="button" @click="smsLogin">登录</button>
+          <div style="text-align: center">
+            <button type="button" @click="smsLogin">登录</button>
+          </div>
         </div>
       </div>
     </div>
@@ -71,7 +74,7 @@ export default {
         return;
       }
       let res = await this.$axios._POST(
-        "https://check.fothing.com/api/oss/user/login",
+        `${require('@/../config.js').host2}/api/oss/user/login`,
         {
           ...this.form_pass,
           clientId: "1qUvjuFXqi3rpr88epJwfw",
@@ -80,7 +83,7 @@ export default {
       );
       if (res.code == "0") {
         window.sessionStorage.setItem("token", res.data.access_token);
-        window.location.href = '/'
+        window.location.href = "/";
       }
     },
     async smsLogin() {
@@ -98,8 +101,8 @@ export default {
         });
         return;
       }
-      const res = this.$axios._POST(
-        "https://check.fothing.com/api/oss/user/login/sms",
+      const res = await this.$axios._POST(
+        `${require('@/../config.js').host2}/api/oss/user/login/sms`,
         {
           ...this.form_sms,
           clientId: "1qUvjuFXqi3rpr88epJwfw",
@@ -108,12 +111,12 @@ export default {
       );
       if (res.code == "0") {
         window.sessionStorage.setItem("token", res.data.access_token);
-        window.location.href = '/'
+        window.location.href = "/";
       }
     },
     async getSms() {
       const res = await this.$axios._GET(
-        `https://check.fothing.com/api/oss/user/${this.form_sms.phone}/login/message`
+        `${require('@/../config.js').host2}/api/oss/user/${this.form_sms.phone}/login/message`
       );
       if (res.code == "0") {
         this.$message({
@@ -127,5 +130,5 @@ export default {
 </script>
 
 <style scoped>
-@import '../common.css';
+@import "../common.css";
 </style>

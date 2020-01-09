@@ -3,7 +3,7 @@ import { Message } from 'element-ui';
 
 // alert(localStorage.getItem('token'))
 export let instance = axios.create({
-  baseURL: 'http://noss.fothing.com',
+  baseURL: `${require('../config.js').host}`,
   timeout: 5000,
   headers: {
   }

@@ -26,7 +26,11 @@
             </div>
             <div class="Web_squaer">
               <div class="flex">
-                <div class="flex-one Web_squaer-item" v-for="feature in init.features" :key="feature.id">
+                <div
+                  class="flex-one Web_squaer-item"
+                  v-for="feature in init.features"
+                  :key="feature.id"
+                >
                   <img :src="feature.resource" alt />
                   <div class="bot">
                     <div class="title">{{feature.title}}</div>
@@ -47,7 +51,7 @@
                 <span class="Web_zoubian">{{init.recomcase.title}}</span>
                 <p class="Web_words" style="text-align: justify;">{{init.recomcase.head}}</p>
                 <span class="Web_know">
-                  <a href="/article.html?code=LOIOT_CASE">了解详情>></a>
+                  <router-link to="/case?code=LOIOT_CASE&child=LOIOT_CASE_CHECK">了解详情>></router-link>
                 </span>
               </div>
               <div class="Web_mid-right">
@@ -56,7 +60,7 @@
             </div>
             <div class="Web_mid-bottom">
               <div class="Web_anli">
-                <a href="/article.html?code=LOIOT_CASE">更多案例</a>
+                <router-link to="/case?code=LOIOT_CASE&child=LOIOT_CASE_CHECK">更多案例</router-link>
               </div>
             </div>
           </div>
@@ -64,10 +68,18 @@
       </div>
       <div class="container3">
         <div class="Web_bigbox4 Web_youshi">
-          <div class="Web_shiyong title" id="Web_youshi" style="margin-bottom: 0;">{{init.advantage.title}}</div>
+          <div
+            class="Web_shiyong title"
+            id="Web_youshi"
+            style="margin-bottom: 0;"
+          >{{init.advantage.title}}</div>
           <div class="description">{{init.advantage.description}}</div>
           <div class="flex">
-            <div class="flex-one Web_youshi-item" v-for="topicItem in init.advantage.topicItems" :key="topicItem.id">
+            <div
+              class="flex-one Web_youshi-item"
+              v-for="topicItem in init.advantage.topicItems"
+              :key="topicItem.id"
+            >
               <img :src="topicItem.resource" alt />
               <div class="bot">
                 <div class="title">{{topicItem.title}}</div>
@@ -82,11 +94,16 @@
       <div class="Web_bigbox4">
         <div class="Web_shiyong" id="Web_shiyong">{{init.usege.title}}</div>
         <div class="Web_box4-mid">
-          <div class="Web_shiyong_topicItem" style="margin-right: 100px;width: 511px;" v-for="topicItem in init.usege.topicItems" :key="topicItem.id">
+          <div
+            class="Web_shiyong_topicItem"
+            style="margin-right: 100px;width: 511px;"
+            v-for="topicItem in init.usege.topicItems"
+            :key="topicItem.id"
+          >
             <div class="title-black">{{topicItem.name}}</div>
             <div class="title-words">{{topicItem.description}}</div>
             <div style="text-align: end;">
-              <a href="/article.html?code=LOIOT_MANU">了解详情>></a>
+              <router-link to="/usege?code=LOIOT_MANU">了解详情>></router-link>
             </div>
           </div>
         </div>
@@ -96,11 +113,23 @@
       <div class="Web_bigbox5">
         <div class="Web_shiyong" id="support">{{init.support.title}}</div>
         <div class="Web_box4-mid">
-          <div class="support_topicItem" style="margin-right: 100px;width: 511px;" v-for="topicItem in init.support.topicItems" :key="topicItem.id">
+          <div
+            class="support_topicItem"
+            style="margin-right: 100px;width: 511px;"
+            v-for="(topicItem, index) in init.support.topicItems"
+            :key="topicItem.id"
+          >
             <div class="title-black">{{topicItem.name}}</div>
             <div class="title-words">{{topicItem.description}}</div>
             <div style="text-align: end;">
-              <a href="/faq.html?code=LOIOT_SUPPORT">了解详情>></a>
+              <router-link
+                v-if="index == 0"
+                to="/faq?code=LOIOT_SUPPORT&child=LOIOT_SUPPORT_ROUTE"
+              >了解详情>></router-link>
+              <router-link
+                v-if="index == 1"
+                to="/faq?code=LOIOT_SUPPORT&child=LOIOT_TECH_NORMAL&tab=LOIOT_TECH_COMMON"
+              >了解详情>></router-link>
             </div>
           </div>
         </div>
@@ -111,6 +140,7 @@
 </template>
 
 <script>
+import { mapMutations } from "vuex";
 import Fixed from "@/components/Fixed.vue";
 export default {
   components: {
@@ -118,22 +148,22 @@ export default {
   },
   data() {
     return {
-      init: {},
+      init: {}
     };
   },
   async created() {
-    let init = await this.$axios._GET(
-      "/api/cms/index/init"
-    );
+    let init = await this.$axios._GET("/api/cms/index/init");
     this.init = init;
+    this.SET_MENU(0);
   },
   methods: {
+    ...mapMutations(['SET_MENU']),
     tiyan() {
       let token = sessionStorage.getItem("token");
       if (token) {
-        window.location.href = `http://localhost:3000/#/auth?access_token=${token}`
+        window.location.href = `${require('@/../config').admin}/#/auth?access_token=${token}`;
       } else {
-        this.$router.replace('/form/login')
+        this.$router.replace("/form/login");
       }
     }
   }
@@ -187,6 +217,7 @@ export default {
   font-size: 16px;
 }
 .Web_btn1 {
+  cursor: pointer;
   width: 160px;
   height: 40px;
   border-radius: 3px;
