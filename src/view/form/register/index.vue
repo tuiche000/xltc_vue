@@ -12,7 +12,8 @@
           <div class="form_item">
             <div class="flex justify-between">
               <input type="password" v-model="form.varCode" placeholder="请输入验证码" />
-              <a href="javascript:void(0)" @click="getSms">获取验证码</a>
+              <a v-if="!countdown" href="javascript:void(0)" @click="getSms">获取验证码</a>
+              <span v-if="countdown">{{countdown}}</span>
             </div>
           </div>
           <div style="text-align: center">
@@ -30,6 +31,7 @@ import { mapMutations } from "vuex";
 export default {
   data() {
     return {
+      countdown: 0,
       form: {
         phone: undefined,
         varCode: undefined,
@@ -74,6 +76,14 @@ export default {
         `${config.host2}/api/oss/user/${this.form.phone}/register/message`
       );
       if (res.code == "0") {
+        this.countdown = 60;
+        let dingshi = setInterval(() => {
+          this.countdown--
+          if (this.countdown == 0) {
+
+            clearInterval(dingshi)
+          }
+        }, 1000);
         this.$message({
           message: "已发送，请注意查收短信",
           type: "success"

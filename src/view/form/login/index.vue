@@ -27,7 +27,8 @@
           <div class="form_item">
             <div class="flex justify-between">
               <input type="text" v-model="form_sms.varCode" placeholder="请输入验证码" />
-              <a href="javascript:void(0)" @click="getSms">获取验证码</a>
+              <a v-if="!countdown" href="javascript:void(0)" @click="getSms">获取验证码</a>
+              <span v-if="countdown">{{countdown}}</span>
             </div>
           </div>
           <div style="text-align: center">
@@ -43,6 +44,7 @@
 export default {
   data() {
     return {
+      countdown: 0,
       form_active: 1,
       form_pass: {
         phone: undefined,
@@ -74,7 +76,7 @@ export default {
         return;
       }
       let res = await this.$axios._POST(
-        `${require('@/../config.js').host2}/api/oss/user/login`,
+        `${require("@/../config.js").host2}/api/oss/user/login`,
         {
           ...this.form_pass,
           clientId: "1qUvjuFXqi3rpr88epJwfw",
@@ -102,7 +104,7 @@ export default {
         return;
       }
       const res = await this.$axios._POST(
-        `${require('@/../config.js').host2}/api/oss/user/login/sms`,
+        `${require("@/../config.js").host2}/api/oss/user/login/sms`,
         {
           ...this.form_sms,
           clientId: "1qUvjuFXqi3rpr88epJwfw",
@@ -116,9 +118,19 @@ export default {
     },
     async getSms() {
       const res = await this.$axios._GET(
-        `${require('@/../config.js').host2}/api/oss/user/${this.form_sms.phone}/login/message`
+        `${require("@/../config.js").host2}/api/oss/user/${
+          this.form_sms.phone
+        }/login/message`
       );
       if (res.code == "0") {
+        this.countdown = 60;
+        let dingshi = setInterval(() => {
+          this.countdown--
+          if (this.countdown == 0) {
+
+            clearInterval(dingshi)
+          }
+        }, 1000);
         this.$message({
           message: "已发送，请注意查收短信",
           type: "success"

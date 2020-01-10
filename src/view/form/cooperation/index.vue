@@ -111,7 +111,7 @@ export default {
     },
     getCaptcha() {
       this.time = new Date().getTime();
-      this.captcha = `${require('@/../config.js')}/api/cms/captcha/${this.time}`;
+      this.captcha = `${require('@/../config.js').host}/api/cms/captcha/${this.time}`;
     },
     changeTab(type) {
       this.form.type = type;

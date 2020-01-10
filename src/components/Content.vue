@@ -69,7 +69,7 @@ export default {
         query: { ...this.$route.query, child: code }
       });
       let res = await this.$axios._GET(
-        `${require('@/../config.js')}/api/cms/page/recent/${code}`
+        `${require('@/../config.js').host}/api/cms/page/recent/${code}`
       );
       this.child = code;
       this.info = res;

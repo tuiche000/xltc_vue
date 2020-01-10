@@ -17,19 +17,21 @@
             <img id="qrcode" :src="info.qrcode" width="100" height="100" alt />
           </div>
         </div>
-        <div style="display: flex;align-items: flex-end;justify-content: space-between;">
-          <div class="Web_foot_bottom flex">
-            <div>
-              <span id="chinese">{{info.chinese}}</span>
-              <span id="icp">&nbsp;{{info.icp}}</span>
-            </div>
-            <div>
-              <span id="copyright">{{info.copyright}}</span>
-            </div>
+      </div>
+    </div>
+    <div class="foot2">
+      <div class="foot2_box">
+        <div class="Web_foot_bottom flex">
+          <div>
+            <span id="chinese">{{info.chinese}}</span>
+            <span id="icp">&nbsp;{{info.icp}}</span>
           </div>
-          <div style="margin-top:10px;" class="Web_foot_bottom flex align-center justify-center">
-            <img style="width: 38px;height: 30px;margin-top:5px;" src="../assets/guohui.png" alt />工商网监认证
+          <div>
+            <span id="copyright">{{info.copyright}}</span>
           </div>
+        </div>
+        <div class="Web_foot_bottom flex align-center justify-center">
+          <img style="width: 38px;height: 30px;margin-top:5px;" src="../assets/guohui.png" alt />工商网监认证
         </div>
       </div>
     </div>
@@ -53,8 +55,21 @@ export default {
 <style scoped>
 .Web_foot {
   width: 100%;
-  height: 220px;
+  height: 180px;
   background: #2257c9;
+}
+.foot2 {
+  width: 100%;
+  background: #284c9a;
+}
+.foot2_box {
+  margin: 0 auto;
+  padding-left: 200px;
+  padding-right: 140px;
+  width: 1180px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
 }
 .Web_foot_all {
   width: 1180px;

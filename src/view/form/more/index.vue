@@ -102,6 +102,9 @@ export default {
     ...mapState(["register"])
   },
   created() {
+    if (!Object.keys(this.register).length) {
+      this.$router.push('/form/register')
+    }
     this.regionAll();
   },
   methods: {
